@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div>
+    <h1>Register Page</h1>
+</div>
+<form method="post" action="/profile/" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div>
+    {{ form.image.label }} {{ form.image }}
+    </div>
+    <br>
+    <div>
+    {{ form.firstname.label }} {{ form.firstname(size=15) }}
+    </div>
+    <br>
+    <div>
+    {{ form.lastname.label }} {{ form.lastname(size=30) }}
+    </div>
+    <br>
+    <div>
+    {{ form.age.label }} {{ form.age(size=3) }}
+    </div>
+    <br>
+    <div>
+    {{ form.sex.label }} {{ form.sex }}
+    </div>
+    <br>
+    <div>
+    {{ form.email.label }} {{ form.email }}
+    </div>
+    <br>
+    <div>
+    {{ form.password.label }} {{ form.password }}
+    </div>
+    <br>
+    
+    <input type="submit" value="Register">
+</form>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="Full">
+        <h1>Profile List</h1>
+        <br/>
+        <div>
+            <form action="" method="POST">
+                <button type="submit" class="btn btn-success">JSon Format</button>
+            </form>
+        </div>
+        <hr />
+        {% for profile in profiles %}
+            <div>
+                <img src="{{ url_for('download_file', filename=profile.image) }}" width = "100px", height = "100px" />
+            </div>
+            <div>
+                <b>User ID: </b> {{profile.userid}}
+            </div>
+            <div>
+                <b>Name: </b> {{profile.firstname}} {{profile.lastname}}
+            </div>
+            <div>
+                <b>Age: </b> {{profile.age}}
+            </div>
+            <div>
+                <b>Sex: </b> {{profile.sex}}
+            </div>
+            <div>
+                
+            </div>
+        
+        {% endfor %}
+
+    
+    
+    
+</div>
+{% endblock %}
