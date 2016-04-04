@@ -1,7 +1,8 @@
 from flask.ext.wtf import Form
-from wtforms.fields import TextField, FileField, IntegerField, SubmitField, SelectField, validators, PasswordField
+from wtforms.fields import TextField, FileField, IntegerField, SubmitField, SelectField, PasswordField
 from wtforms.validators import Required, ValidationError, DataRequired,Email,Length
 from flask_wtf.file import FileField, FileAllowed, FileRequired
+from wtforms import validators
 
 class userForm(Form):
     firstname = TextField('FirstName', validators = [Required()])

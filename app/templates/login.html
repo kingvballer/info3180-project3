@@ -2,12 +2,12 @@
 
 {% block main %}
 <div>
-    <h1>Profile Data</h1>
+    <h1>Wishlist Login</h1>
 </div>
-<form method="post" action="/login/" enctype="multipart/form-data">
+<form method="post" action="/api/user/login" enctype="multipart/form-data">
     {{ form.csrf_token }}
     <div>
-    {{ form.username.label }} {{ form.username }}
+    {{ form.email.label }} {{ form.email }}
     </div>
     <br>
     <div>
@@ -15,6 +15,11 @@
     </div>
     <br>
     <input type="submit" value="Login">
+    <br>
+    <p>If you are a new user Please  <a href="{{ url_for('newprofile') }}">CLICK HERE</a> to register </p>
+    <br>
+    
+    
     
 </form>
 {% endblock %}

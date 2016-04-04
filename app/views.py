@@ -63,16 +63,16 @@ def login():
             return redirect('/api/user/'+str(db_id))
         else:
             error = 'Invalid credentials'
-            return render_template("home.html",error=error,form=form)
+            return render_template("login.html",error=error,form=form)
     form = Login()
-    return render_template("home.html",error=error,form=form)
+    return render_template("login.html",error=error,form=form)
 
 
 @app.route('/logout')
 def logout():
     logout_user()
     session['logged_in'] = False
-    return redirect('/')
+    return redirect('/api/user/login')
 
 
 @app.route('/api/user/register', methods = ['POST','GET'])
@@ -91,7 +91,7 @@ def newprofile():
         profilefilter = User.query.filter_by(email=newProfile.email).first()
         return redirect('/api/user/'+str(profilefilter.userid))
     form = userForm()
-    return render_template('registration.html',form=form)
+    return render_template('register.html',form=form)
 
 
 @app.route('/api/user/<userid>')
@@ -99,7 +99,7 @@ def newprofile():
 def profile_view(userid):
     if g.user.is_authenticated:
         profile_vars = {'id':g.user.userid, 'email':g.user.email, 'age':g.user.age, 'firstname':g.user.firstname, 'lastname':g.user.lastname, 'sex':g.user.sex}
-        return render_template('profile_view.html',profile=profile_vars)
+        return render_template('welcome.html',profile=profile_vars)
     
 
 @app.route('/api/user/<id>/wishlist', methods = ['POST','GET'])

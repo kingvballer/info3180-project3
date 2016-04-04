@@ -19,22 +19,6 @@ class User(db.Model):
         self.email = email
         self.password = password
         
-        
-        
-class mywishList(db.Model):
-    wishid = db.Column(db.Integer, primary_key=True)
-    userid = db.Column(db.Integer, db.ForeignKey('myprofile.userid'))
-    title = db.Column(db.String(100))
-    description = db.Column(db.String(500))
-    description_url = db.Column(db.String(500))
-    
-    
-    def __init__(self, userid, title, description, description_url):
-        self.userid = userid
-        self.title = title
-        self.description = description
-        self.description_url = description_url
-        
     def is_authenticated(self):
         return True
         
@@ -49,6 +33,25 @@ class mywishList(db.Model):
         
     def get_id(self):
         return unicode(self.userid)
+        
+    def __repr__(self):
+        return '<User %r>' % self.email 
+        
+class mywishList(db.Model):
+    wishid = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, db.ForeignKey('user.userid'))
+    title = db.Column(db.String(100))
+    description = db.Column(db.String(500))
+    description_url = db.Column(db.String(500))
+    
+    
+    def __init__(self, userid, title, description, description_url):
+        self.userid = userid
+        self.title = title
+        self.description = description
+        self.description_url = description_url
+        
+    
 
     def __repr__(self):
         return '<User %r>' % self.username
