@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="Full">
+        <h1>Your Wishlist</h1>
+        <br/>
+        <div>
+            <form action="" method="POST">
+                <button type="submit" class="btn btn-success">JSon Format</button>
+            </form>
+        </div>
+        <hr />
+        {% for wishes in wishlists %}
+            
+            <div>
+                <b>Title: </b> {{wishes.title}}
+            </div>
+            <div>
+                <b>Description: </b> {{wishes.description}}
+            </div>
+            <div>
+                <b>Url: </b> {{wishes.url}}
+            </div>
+            
+            <div>
+                
+            </div>
+        
+        {% endfor %}
+
+    
+    
+    
+</div>
+{% endblock %}

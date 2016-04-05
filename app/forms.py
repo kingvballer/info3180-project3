@@ -27,4 +27,4 @@ class WishForm(Form):
     title = TextField('Title')
     description = TextField('Description')
     description_url = TextField('Reference')
-    image_url = TextField('Reference')
+    

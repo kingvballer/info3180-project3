@@ -111,9 +111,8 @@ def wishlist(id):
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        description_url = request.form['url']
-        image_url = request.form['image_url']
-        newWish = mywishList(userid=id, title=title, description=description, description_url=description_url, image_url=image_url)
+        url = request.form['url']
+        newWish = mywishList(userid=id, title=title, description=description, description_url=url)
         db.session.add(newWish)
         db.session.commit()
         profilefilter = mywishList.query.filter_by(wishid=newWish.wishid).first()
@@ -127,7 +126,7 @@ def wishlists(id):
     wishlists = mywishList.query.all()
     storage = []
     for wishes in wishlists:
-        storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url, 'image_url':wishes.image_url})
+        storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url})
     
     wishes = {'wishes': storage}
     
