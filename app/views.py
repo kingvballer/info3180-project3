@@ -16,6 +16,7 @@ from sqlalchemy.sql import functions
 from random import randint
 from functools import wraps
 from bs4 import BeautifulSoup
+import requests
 
 import os
 import json
@@ -110,22 +111,38 @@ def wishlist(id):
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        url = request.form['url']
-        newWish = mywishList(userid=id, title=title, description=description, description_url=url)
+        description_url = request.form['url']
+        image_url = request.form['image_url']
+        newWish = mywishList(userid=id, title=title, description=description, description_url=description_url, image_url=image_url)
         db.session.add(newWish)
         db.session.commit()
         profilefilter = mywishList.query.filter_by(wishid=newWish.wishid).first()
         return redirect(url_for('getPics',wishid=profilefilter.wishid))
     form = WishForm()
-    return render_template('addWish.html',form=form,profile=profile_vars)
-
+    return render_template('addtowishlist.html',form=form,profile=profile_vars)
+    
+    
+@app.route('/api/user/<id>/wishlists', methods=('GET', 'POST'))
+def wishlists(id):
+    wishlists = mywishList.query.all()
+    storage = []
+    for wishes in wishlists:
+        storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url, 'image_url':wishes.image_url})
+    
+    wishes = {'wishes': storage}
+    
+    if request.method == 'POST':
+      return jsonify(wishes)
+    else:
+      return render_template('viewlistwish.html',wishlists=storage)  
+    
     
 @app.route('/api/thumbnail/process/<wishid>')
 @login_required
 def getPics(wishid):
     profilefilter = mywishList.query.filter_by(wishid=wishid).first()
     url = profilefilter.description_url
-    result = request.get(url)
+    result = requests.get(url)
     data = result.text
     images = []
     soup = BeautifulSoup(data, 'html.parser')
@@ -141,7 +158,10 @@ def getPics(wishid):
     for img in soup.find_all("img", class_="a-dynamic-image"):
         if "sprite" not in img["src"]:
             images.append(img['src'])
-    return render_template('pickimage.html',images=images)
+    return render_template('thumbnails.html',images=images)
+    
+    
+
 
 @app.route('/')
 def home():

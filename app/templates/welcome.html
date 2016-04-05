@@ -27,8 +27,8 @@ body{
     <div class="c1">
         <h3>{{profile.firstname}} {{profile.lastname}}'s Wishlist</h3>
         <a href="/api/user/{{profile.id}}/wishlist">Add a wish to your wishlist.</a><br><br>
-        <a href="/api/user/{{profile.id}}/wishlist">Remove a wish from your wishlist</a><br><br>
-        <a href="/api/user/{{profile.id}}/wishlist">View your wishlist</a><br><br>
+        
+        <a href="/api/user/{{profile.id}}/wishlists">View your wishlist</a><br><br>
       
         <a href="{{ url_for('logout') }}">Logout</a></li>
     </div>
