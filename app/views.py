@@ -159,7 +159,20 @@ def getPics(wishid):
             images.append(img['src'])
     return render_template('thumbnails.html',images=images)
     
+@app.route('/api/thumbnail/add', methods=['POST'])
+def thumbnailAdd():
+    #image_url = request.data['image_url'];
+    # get data sent from ajax request
+    image_url = request.form['image_url']
+    id = request.form["item_id"]
     
+    # Update wishlist item in database with above info
+    wishlist_item = mywishList.query.filter_by(wishid=id).first()
+    wishlist_item.image_url = image_url
+    db.session.commit()
+    
+    # return success message
+    return jsonify(message="succcess")
 
 
 @app.route('/')
