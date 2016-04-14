@@ -112,13 +112,14 @@ def wishlist(id):
         title = request.form['title']
         description = request.form['description']
         url = request.form['url']
-        newWish = mywishList(userid=id, title=title, description=description, description_url=url)
+        imageUrl = request.form['imageUrl']
+        newWish = mywishList(userid=id, title=title, description=description, description_url=url, image_url = imageUrl)
         db.session.add(newWish)
         db.session.commit()
         profilefilter = mywishList.query.filter_by(wishid=newWish.wishid).first()
         return redirect(url_for('getPics',wishid=profilefilter.wishid))
     form = WishForm()
-    return render_template('addtowishlist.html',form=form,profile=profile_vars)
+    return render_template('addpic.html',form=form,profile=profile_vars)
     
     
 @app.route('/api/user/<id>/wishlists', methods=('GET', 'POST'))
@@ -126,7 +127,7 @@ def wishlists(id):
     wishlists = mywishList.query.all()
     storage = []
     for wishes in wishlists:
-        storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url})
+        storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url, 'imageUrl':wishes.image_url})
     
     wishes = {'wishes': storage}
     

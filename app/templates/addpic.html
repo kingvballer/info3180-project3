@@ -2,12 +2,9 @@
 
 
 {% block main %}
-
-
     {% if error %}
         <p class=error><strong>Error:</strong> {{ error }} </p>
     {% endif %}
-
 <body>
     <div class="container">
         <br><h4>{{profile.firstname}} Please Add Your Wishes</h4><br>
@@ -20,10 +17,7 @@
                     <textarea class="form-control" id="Post" name="description" value="{{request.form.description}}"></textarea><br>
                     <label class="col-md-4 control-label" for="url">Reference</label>
                     <input id="url" name="url" type="text" placeholder="Add Reference URL here if available" class="form-control input-md" value="{{request.form.description_url}}"><br>
-                    <label class="col-md-4 control-label" for="Url">Image Url</label>
-                    <input id="url" name="url" type="text" placeholder="Add Image URL here" class="form-control input-md" value="{{request.form.image_url}}"><br>
-                    
-                    <input id="wish_add" name="wish_add" class="btn btn-primary" type="submit" value="Add To Wishlist" />
+                    <input id="wish_add" name="wish_add" class="btn btn-primary" type="submit" value="Submit Wish" />
                     
                     <a href="{{ url_for('logout') }}">Logout</a></li>
                 </div>
