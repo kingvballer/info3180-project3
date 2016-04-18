@@ -5,16 +5,18 @@
     {% if error %}
         <p class=error><strong>Error:</strong> {{ error }} </p>
     {% endif %}
-    
-<body>
-    <div class="container">
+    <div class="container" ng-controller = "appController">
         <br><h4>Please select an image for your thumbnail</h4><br>
         {% for image in images %}
-            <img src="{{image}}" height="100" width="100" name="theimage" onclick="storeurl(this.src);return false;"/>
+            <div ></div>
+            <!--<input type="radio" name="image" value="{{ image }}"><img src="{{image}}" height="100" width="100" name="img_url"/></a>-->
+            <!--<a href="/api/thumbnail/process/<wishid>" ng-click="myClickedEvent"><img src="{{image}}" height="100" width="100" name="theimage" id="myImg"/></a>-->
+            <img src="{{image}}" height="100" width="100" name="theimage" id="myImg" ng-click="myClickedEvent($event)"/>
         {% endfor %}
-        <img src="http://ecx.images-amazon.com/images/I/91lEkHbDwLL._SY355_.jpg" height="100" width="100" alt="theimage"/>
-        <img src="http://pisces.bbystatic.com/image2/BestBuy_US/images/products/4481/4481400_sd.jpg" height="100" width="100" alt="theimage"/>
-        <img src="http://ecx.images-amazon.com/images/I/713a0-PujUL._SL1500_.jpg" height="100" width="100" alt="theimage"/>
     </div>
-</body>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script type="text/javascript" src="/static/js/app.js"></script>
 {% endblock %}

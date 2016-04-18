@@ -112,7 +112,7 @@ def wishlist(id):
         title = request.form['title']
         description = request.form['description']
         url = request.form['url']
-        imageUrl = request.form['imageUrl']
+        imageUrl = ""
         newWish = mywishList(userid=id, title=title, description=description, description_url=url, image_url = imageUrl)
         db.session.add(newWish)
         db.session.commit()
@@ -123,8 +123,9 @@ def wishlist(id):
     
     
 @app.route('/api/user/<id>/wishlists', methods=('GET', 'POST'))
+@login_required
 def wishlists(id):
-    wishlists = mywishList.query.all()
+    wishlists = mywishList.query.filter_by(userid=id).all()
     storage = []
     for wishes in wishlists:
         storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url, 'imageUrl':wishes.image_url})
@@ -164,7 +165,7 @@ def getPics(wishid):
 def thumbnailAdd():
     #image_url = request.data['image_url'];
     # get data sent from ajax request
-    image_url = request.form['image_url']
+    image_url = request.form['imageUrl']
     id = request.form["item_id"]
     
     # Update wishlist item in database with above info
