@@ -140,21 +140,41 @@ def wishlists(id):
     else:
       return render_template('viewlistwish.html',wishlists=storage)
       
-@app.route('/api/user/<id>/wishlists/share', methods = ('GET', 'POST'))
-def wishShare():
-    form = Emailshare()
+@app.route('/api/user/<id>/wishlists/share', methods = ('POST'))
+def wishShare(id):
+    profile = User.query.filter_by(userid=id).first()
+    #profile_vars = {'id':profile.userid, 'firstname':profile.firstname, 'lastname':profile.lastname}
     if request.method == 'POST':
-        username = 'alrick.brown@gmail.com'
-        password = 'iuxcacjacrbjdhbs'
-        msg['To'] = toaddrs
+        email = request.json['email']
+        link = "http://info3180-wishlist2-kingvballer.c9users.io/api/user/" + id + "/wishlists"
+        fromname = profile.firstname + " " + profile.lastname
+        fromaddr = profile.email
+        toname = ''
+        toaddr  = email
+        subject = 'Wishlist'
+        msg = 'This is just a test, please click on the link to view my wishlist' + "" + link
+        message = """From: {} <{}>
+To: {} <{}>
+Subject: {}
+
+{}
+
+        """
+        messagetosend = message.format(fromname, fromaddr, toname, toaddr, subject, msg)
         
-        email = request.form['email']
-        link = "http://info3180-wishlist2-kingvballer.c9users.io/api/user/6/wishlists"
+        # Credentials (if needed)
+        username = 'alrick.brown@gmail.com'
+        password = 'kivusqbdszzyjnze'
+        
+        # The actual mail send
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
         server.login(username,password)
-        server.sendmail(toaddrs)
+        server.sendmail(fromaddr, toaddr, messagetosend)
         server.quit()
+        return jsonify(message="succcess")
+    
+
         
         
     

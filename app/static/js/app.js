@@ -59,3 +59,48 @@ myApp.controller('appController', function($scope, $http) {
     
     
 });
+myApp.controller('emailControler', function($scope, $http) {
+    $scope.isPopupVisible = false;
+    
+    $scope.showPopup = function(email) {
+        $scope.isPopupVisible = true;
+        $scope.selectedEmail = email;
+    };
+    
+    $scope.closePopup = function() {
+        $scope.isPopupVisible = false;
+    };
+    
+    $scope.composeEmail = {};
+    $scope.emailSent = false;
+    
+    var addressBarUrl = location.pathname;
+        console.log(addressBarUrl);
+        // split URL into different parts after each "/"
+        var addressBarUrlParts = addressBarUrl.split("/");
+        console.log(addressBarUrlParts);
+    
+    $scope.sendEmail = function() {
+        $http.post("/api/user/" + addressBarUrlParts[3] + "/wishlists/share", {email: $scope.email}).then(function (response) {
+            $scope.emailSent = true;
+            console.log (response.data);
+            $('#myModal').modal('hide')
+            //$scope.isComposePopupVisible = false;
+            
+            // $scope.composeEmail = response.data;
+            // $scope.sentEmails.splice(0, 0, $scope.composeEmail);
+        }, function() {
+            $scope.emailSent = false;
+            // Display a message that wishlist wasn't shared.
+        });
+    };
+    
+    $scope.showComposePopup = function() {
+        $scope.composeEmail = {};
+        $scope.isComposePopupVisible = true;
+    };
+
+
+
+
+});
