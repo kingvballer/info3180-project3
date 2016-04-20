@@ -9,18 +9,21 @@ This file creates your application.
 from app import db, app
 from app.models import User, mywishList
 from flask import render_template, request, redirect, url_for, flash, jsonify, send_from_directory, g, session
-from .forms import userForm, Login, Register, WishForm
+from .forms import userForm, Login, Register, WishForm, Emailshare
 from werkzeug import secure_filename
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
 from sqlalchemy.sql import functions
 from random import randint
 from functools import wraps
 from bs4 import BeautifulSoup
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import requests
 
 import os
 import json
 import random
+import smtplib
 
 
 
@@ -135,7 +138,25 @@ def wishlists(id):
     if request.method == 'POST':
       return jsonify(wishes)
     else:
-      return render_template('viewlistwish.html',wishlists=storage)  
+      return render_template('viewlistwish.html',wishlists=storage)
+      
+@app.route('/api/user/<id>/wishlists/share', methods = ('GET', 'POST'))
+def wishShare():
+    form = Emailshare()
+    if request.method == 'POST':
+        username = 'alrick.brown@gmail.com'
+        password = 'iuxcacjacrbjdhbs'
+        msg['To'] = toaddrs
+        
+        email = request.form['email']
+        link = "http://info3180-wishlist2-kingvballer.c9users.io/api/user/6/wishlists"
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.starttls()
+        server.login(username,password)
+        server.sendmail(toaddrs)
+        server.quit()
+        
+        
     
     
 @app.route('/api/thumbnail/process/<wishid>')
@@ -165,9 +186,10 @@ def getPics(wishid):
 def thumbnailAdd():
     #image_url = request.data['image_url'];
     # get data sent from ajax request
-    image_url = request.form['imageUrl']
-    id = request.form["item_id"]
-    
+    image_url = request.json['image_url']
+    id = request.json["item_id"]
+    # print image_url
+    # print id
     # Update wishlist item in database with above info
     wishlist_item = mywishList.query.filter_by(wishid=id).first()
     wishlist_item.image_url = image_url

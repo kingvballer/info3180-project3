@@ -23,6 +23,9 @@ class Register(Form):
       password = PasswordField('Password', [validators.Required('** password required **'), validators.EqualTo('confirm', message='** passwords must match **')])
       confirm = PasswordField('Confirm Password')
       
+class Emailshare(Form):
+      email = TextField('Email', validators=[validators.Required('** email is Required **'), validators.Email('** invalid Email **')])
+      
 class WishForm(Form):
     title = TextField('Title')
     description = TextField('Description')

@@ -32,20 +32,30 @@ myApp.controller('appController', function($scope, $http) {
         var url = element.src;
         console.log(url);
         
+        // Get URL from location bar
+        var addressBarUrl = location.pathname;
+        console.log(addressBarUrl);
+        // split URL into different parts after each "/"
+        var addressBarUrlParts = addressBarUrl.split("/");
+        console.log(addressBarUrlParts);
+        
     
 // Get the URL for the image clicked by grabbing it's src attribute
         //this.url = url;
     // Then make an Ajax request using the POST method to the 
     //appropriate API route
-        $http.post('/api/thumbnail/add', url{
-            image_url : url
-  
-},{
-        headers: {'Content-Type': "application/x-www-form-urlencoded"}
-}).then(function(response){
-    // Do something if the AJAX request is successful
-        console.log(response);
+        $http.post('/api/thumbnail/add',{
+            image_url : url,
+            item_id : addressBarUrlParts[4]
+        }).then(function(response){
+            // Do something if the AJAX request is successful
+            // console.log(response);
+            window.location = '/api/user/6';
+        });
     
-})
+    };
     
-}});
+    
+    
+    
+});
