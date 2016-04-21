@@ -1,0 +1,23 @@
+<div>
+   <h1>Wishlist Login</h1>
+</div>
+
+<form class = "form" ng-submit = "login()">
+    
+    <div class = "form-group">
+        <label>Email</label>
+        <input type="text" class="form-control" name="email" ng-model="loginForm.email" required>
+    </div>
+    <br>
+    <div>
+        <label>Password</label>
+        <input type="password" class="form-control" name="password" ng-model="loginForm.password" required>
+    </div>
+    <br>
+    <div>
+    <button type="submit" class="btn btn-default" ng-disabled="disabled">Login</button>
+    </div>
+    <br>
+    <p>If you are a new user Please  <a href="#/register">CLICK HERE</a> to register </p>
+    <br>
+</form>

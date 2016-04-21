@@ -39,6 +39,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
 
 @login_manager.user_loader
 def load_user(id):
@@ -50,33 +54,50 @@ def before_request():
     g.user = current_user
     
 
-@app.route('/api/user/login', methods=['POST','GET'])
+# @app.route('/api/user/login', methods=['POST','GET'])
+# def login():
+#     error=None
+#     form = Login(request.form)
+#     if request.method == 'POST':
+#         attempted_email = request.form['email']
+#         attempted_password = request.form['password']
+#         db_creds = User.query.filter_by(email=attempted_email).first()
+#         db_email = db_creds.email
+#         db_password = db_creds.password
+#         db_id = db_creds.userid
+#         if attempted_email == db_email and attempted_password == db_password:
+#             session['logged_in'] = True
+#             login_user(db_creds)
+#             return redirect('/api/user/'+str(db_id))
+#         else:
+#             error = 'Invalid credentials'
+#             return render_template("login.html",error=error,form=form)
+#     form = Login()
+#     return render_template("login.html",error=error,form=form)
+    
+@app.route('/api/user/login', methods=['POST'])
 def login():
-    error=None
-    form = Login(request.form)
-    if request.method == 'POST':
-        attempted_email = request.form['email']
-        attempted_password = request.form['password']
-        db_creds = User.query.filter_by(email=attempted_email).first()
-        db_email = db_creds.email
-        db_password = db_creds.password
-        db_id = db_creds.userid
-        if attempted_email == db_email and attempted_password == db_password:
-            session['logged_in'] = True
-            login_user(db_creds)
-            return redirect('/api/user/'+str(db_id))
-        else:
-            error = 'Invalid credentials'
-            return render_template("login.html",error=error,form=form)
-    form = Login()
-    return render_template("login.html",error=error,form=form)
-
-
-@app.route('/logout')
+    json_data = request.json
+    user = User.query.filter_by(email=json_data['email']).first()
+    if user(
+            user.password, json_data['password']):
+        session['logged_in'] = True
+        status = True
+    else:
+        status = False
+    return jsonify({'result': status})
+    
+    
+@app.route('/api/logout')
 def logout():
-    logout_user()
-    session['logged_in'] = False
-    return redirect('/api/user/login')
+    session.pop('logged_in', None)
+    return jsonify({'result': 'success'})
+
+# @app.route('/logout')
+# def logout():
+#     logout_user()
+#     session['logged_in'] = False
+#     return redirect('/api/user/login')
 
 
 @app.route('/api/user/register', methods = ['POST','GET'])
@@ -219,10 +240,10 @@ def thumbnailAdd():
     return jsonify(message="succcess")
 
 
-@app.route('/')
-def home():
-    """Render website's home page."""
-    return render_template('home.html')
+# @app.route('/')
+# def home():
+#     """Render website's home page."""
+#     return render_template('home.html')
 
 
 @app.route('/about/')

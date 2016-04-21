@@ -1,30 +1,6 @@
-// window.onload = function() {
-//     var images = document.getElementsByTagName('img');
-//     console.log(images);
-    
-//     for (var i=0; i < images.length; i++) {
-//         images[i].onclick = function(elem) {
-//             console.log(elem.target.src);
-//             image_url = elem.target.src;
-//             var xhr = new XMLHttpRequest();
-//             xhr.open('POST', '/api/thumbnail/add');
-//             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//             xhr.send('image_url=' + encodeURIComponent(image_url) + "&item_id=16");
-//             return false;
-//         }
-//     }
-// }
-
-var myApp = angular.module('myApp',[]);
+var myApp = angular.module('myApp',["ngRoute"]);
 
 myApp.controller('appController', function($scope, $http) {
-    //$scope.imgclick = "";
-    
-// Get images
-    //var images = document.getElementsByTagName('img');
-    
-// When you click on an image, trigger 'onclick' event handler
-    
     $scope.myClickedEvent = function(clickEvent) {
         //$scope.clickEvent = simpleKeys(clickEvent);
         var element = clickEvent.target;
@@ -38,12 +14,7 @@ myApp.controller('appController', function($scope, $http) {
         // split URL into different parts after each "/"
         var addressBarUrlParts = addressBarUrl.split("/");
         console.log(addressBarUrlParts);
-        
-    
-// Get the URL for the image clicked by grabbing it's src attribute
-        //this.url = url;
-    // Then make an Ajax request using the POST method to the 
-    //appropriate API route
+       
         $http.post('/api/thumbnail/add',{
             image_url : url,
             item_id : addressBarUrlParts[4]
@@ -54,9 +25,6 @@ myApp.controller('appController', function($scope, $http) {
         });
     
     };
-    
-    
-    
     
 });
 myApp.controller('emailControler', function($scope, $http) {
@@ -101,6 +69,39 @@ myApp.controller('emailControler', function($scope, $http) {
     };
 
 
+});
 
-
+myApp.config(function ($routeProvider){
+    $routeProvider
+        .when('/', {
+            templateUrl: 'static/angularT/home.html'
+        })
+        .when('/login',{
+            templateUrl: 'static/angularT/login.html',
+            controller: 'loginController',
+            access: {restricted: false}
+            
+        })
+        .when('/logout', {
+            controller: 'logoutController',
+            access: {restricted: true}
+        })
+        
+        .when('/welcome', {
+            template: '/static/angularT/welcome.html',
+            access: {restricted: true}
+        })
+        
+        
+        .otherwise({
+            redirectTo: '/'
+        });
+    
+    
+    
+    
+    
+    
+    
+    
 });
