@@ -1,0 +1,42 @@
+<head>
+    <div>
+        <h1>Add Wishlist</h1>
+    </div>
+     
+ </head>
+ 
+ <body>
+
+        <form class = "form" ng-submit = "wishAdd()">
+            
+            <div class = "form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" name="title" ng-model="addForm.title" required>
+            </div >
+            <br>
+            <div class = "form-group">
+                <label>Description</label>
+                <input type="text" class="form-control" name="description" ng-model="addForm.description" required>
+            </div >
+            <br>
+            
+            <div class = "form-group">
+                <label>Url</label>
+                <input type="text" class="form-control" name="url" ng-model="addForm.url" required>
+            </div >
+            <br>
+            <div class = "form-group">
+                <label>Image Url</label>
+                <input type="text" class="form-control" name="imageUrl" ng-model="addForm.imageUrl" required>
+            </div >
+            <br>
+            
+            <div ng-submit = "wishAdd()">
+                <button type="submit" class="btn btn-default" ng-disabled="disabled">Add Wish</button>
+            </div>
+            
+            <div ng-controller="logoutController">
+                <a ng-click='logout()' class="btn btn-default">Logout</a>
+            </div>
+            
+        </form>

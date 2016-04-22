@@ -1,0 +1,20 @@
+
+<div>
+    <h1>My Wishlist</h1>
+</div>
+<form action="{{ '/api/user/' + userid + '/wishlist' }}" method="GET">
+    <button type="submit" class="btn btn-success">JSON Format</button>
+</form>
+<div ng-init="viewWish()">
+    <div ng-repeat="wish in wishListItems">
+        <h2><a href="{{ wish.url }}">{{ wish.title }}</a></h2>
+        <p>{{ wish.description }}</p>
+        <img ng-src="{{ wish.imageUrl }}" alt="Photo of {{ wish.title }}" />
+    </div>
+</div>
+ 
+            
+            
+<div ng-controller="logoutController">
+    <a ng-click='logout()' class="btn btn-default">Logout</a>
+</div>

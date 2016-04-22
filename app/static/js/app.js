@@ -88,9 +88,32 @@ myApp.config(function ($routeProvider){
         })
         
         .when('/welcome', {
-            template: '/static/angularT/welcome.html',
+            templateUrl: 'static/angularT/welcome.html',
+            controller: 'wishlistController',
             access: {restricted: true}
         })
+        
+        .when('/register', {
+            templateUrl: 'static/angularT/register.html',
+            controller: 'registerController',
+            access: {restricted: false}
+        })
+        
+        .when('/add', {
+            templateUrl: 'static/angularT/addWish.html',
+            controller: 'wishlistController',
+            access: {restricted: false}
+            
+        })
+        
+        .when('/view/:userid', {
+            templateUrl: 'static/angularT/viewWish.html',
+            controller: 'wishlistController',
+            access: {restricted: false}
+            
+        })
+        
+        
         
         
         .otherwise({

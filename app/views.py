@@ -79,16 +79,17 @@ def before_request():
 def login():
     json_data = request.json
     user = User.query.filter_by(email=json_data['email']).first()
-    if user(
-            user.password, json_data['password']):
+    print user.password
+    if user.password == json_data['password']:
         session['logged_in'] = True
         status = True
+        userid = user.userid
     else:
         status = False
-    return jsonify({'result': status})
+    return jsonify({'result': status, 'userid': userid})
     
     
-@app.route('/api/logout')
+@app.route('/api/user/logout')
 def logout():
     session.pop('logged_in', None)
     return jsonify({'result': 'success'})
@@ -100,23 +101,45 @@ def logout():
 #     return redirect('/api/user/login')
 
 
-@app.route('/api/user/register', methods = ['POST','GET'])
-def newprofile():
-    if request.method == 'POST':
-        form = userForm()
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        sex = request.form['sex']
-        age = int(request.form['age'])
-        email = request.form['email']
-        password = request.form['password']
-        newProfile =User(firstname=firstname, lastname=lastname, email=email, password=password, sex=sex, age=age)
-        db.session.add(newProfile)
+# @app.route('/api/user/register', methods = ['POST','GET'])
+# def newprofile():
+#     if request.method == 'POST':
+#         form = userForm()
+#         firstname = request.form['firstname']
+#         lastname = request.form['lastname']
+#         sex = request.form['sex']
+#         age = int(request.form['age'])
+#         email = request.form['email']
+#         password = request.form['password']
+#         newProfile =User(firstname=firstname, lastname=lastname, email=email, password=password, sex=sex, age=age)
+#         db.session.add(newProfile)
+#         db.session.commit()
+#         profilefilter = User.query.filter_by(email=newProfile.email).first()
+#         return redirect('/api/user/'+str(profilefilter.userid))
+#     form = userForm()
+#     return render_template('register.html',form=form)
+
+@app.route('/api/user/register', methods=['POST'])
+def register():
+    json_data = request.json
+    user = User(
+        firstname=json_data['firstname'],
+        lastname=json_data['lastname'],
+        sex=json_data['sex'],
+        age=json_data['age'],
+        email=json_data['email'],
+        password=json_data['password']
+        
+    )
+    try:
+        db.session.add(user)
         db.session.commit()
-        profilefilter = User.query.filter_by(email=newProfile.email).first()
-        return redirect('/api/user/'+str(profilefilter.userid))
-    form = userForm()
-    return render_template('register.html',form=form)
+        status = 'success'
+    except:
+        status = 'this user is already registered'
+    db.session.close()
+    return jsonify({'result': status})
+
 
 
 @app.route('/api/user/<userid>')
@@ -127,27 +150,66 @@ def profile_view(userid):
         return render_template('welcome.html',profile=profile_vars)
     
 
-@app.route('/api/user/<id>/wishlist', methods = ['POST','GET'])
+# @app.route('/api/user/<id>/wishlist', methods = ['POST'])
+# @login_required
+# def wishlist(id):
+#     profile = User.query.filter_by(userid=id).first()
+#     profile_vars = {'id':profile.userid, 'email':profile.email, 'age':profile.age, 'firstname':profile.firstname, 'lastname':profile.lastname, 'sex':profile.sex}
+#     if request.method == 'POST':
+#         title = request.form['title']
+#         description = request.form['description']
+#         url = request.form['url']
+#         imageUrl = ""
+#         newWish = mywishList(userid=id, title=title, description=description, description_url=url, image_url = imageUrl)
+#         db.session.add(newWish)
+#         db.session.commit()
+#         profilefilter = mywishList.query.filter_by(wishid=newWish.wishid).first()
+#         return redirect(url_for('getPics',wishid=profilefilter.wishid))
+#     form = WishForm()
+#     return render_template('addpic.html',form=form,profile=profile_vars)
+    
+    
+@app.route('/api/user/<id>/wishlist', methods = ['POST'])
 @login_required
 def wishlist(id):
-    profile = User.query.filter_by(userid=id).first()
-    profile_vars = {'id':profile.userid, 'email':profile.email, 'age':profile.age, 'firstname':profile.firstname, 'lastname':profile.lastname, 'sex':profile.sex}
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        url = request.form['url']
-        imageUrl = ""
-        newWish = mywishList(userid=id, title=title, description=description, description_url=url, image_url = imageUrl)
-        db.session.add(newWish)
+    json_data = request.json
+    wishAdd = mywishList(
+        userid=json_data['userid'],
+        title=json_data['title'],
+        description=json_data['description'],
+        description_url=json_data['url'],
+        image_url=json_data['imageUrl']
+        
+    )
+    try:
+        db.session.add(wishAdd)
         db.session.commit()
-        profilefilter = mywishList.query.filter_by(wishid=newWish.wishid).first()
-        return redirect(url_for('getPics',wishid=profilefilter.wishid))
-    form = WishForm()
-    return render_template('addpic.html',form=form,profile=profile_vars)
+        status = 'success'
+    except:
+        status = 'this user is already registered'
+    db.session.close()
+    return jsonify({'result': status})
     
     
-@app.route('/api/user/<id>/wishlists', methods=('GET', 'POST'))
-@login_required
+    
+    
+# @app.route('/api/user/<id>/wishlists', methods=('GET'))
+# @login_required
+# def wishlists(id):
+#     wishlists = mywishList.query.filter_by(userid=id).all()
+#     storage = []
+#     for wishes in wishlists:
+#         storage.append({'title':wishes.title, 'description':wishes.description, 'url':wishes.description_url, 'imageUrl':wishes.image_url})
+    
+#     wishes = {'wishes': storage}
+    
+#     if request.method == 'POST':
+#       return jsonify(wishes)
+#     else:
+#       return render_template('viewlistwish.html',wishlists=storage)
+      
+@app.route('/api/user/<id>/wishlist', methods=['GET'])
+#@login_required
 def wishlists(id):
     wishlists = mywishList.query.filter_by(userid=id).all()
     storage = []
@@ -156,10 +218,10 @@ def wishlists(id):
     
     wishes = {'wishes': storage}
     
-    if request.method == 'POST':
-      return jsonify(wishes)
-    else:
-      return render_template('viewlistwish.html',wishlists=storage)
+    # if request.method == 'POST':
+    return jsonify(wishes)
+    # else:
+    #   return render_template('viewlistwish.html',wishlists=storage)
       
 @app.route('/api/user/<id>/wishlists/share', methods = ('POST'))
 def wishShare(id):
@@ -198,8 +260,6 @@ Subject: {}
 
         
         
-    
-    
 @app.route('/api/thumbnail/process/<wishid>')
 @login_required
 def getPics(wishid):
@@ -221,8 +281,40 @@ def getPics(wishid):
     for img in soup.find_all("img", class_="a-dynamic-image"):
         if "sprite" not in img["src"]:
             images.append(img['src'])
-    return render_template('thumbnails.html',images=images)
+    return render_template('thumbnails.html',images=images)    
     
+# @app.route('/api/thumbnail/process/<wishid>')
+# @login_required
+# def getPics(wishid):
+#     profilefilter = mywishList.query.filter_by(wishid=wishid).first()
+#     url = profilefilter.description_url
+#     result = requests.get(url)
+#     data = result.text
+#     images = []
+#     soup = BeautifulSoup(data, 'html.parser')
+#     og_image = (soup.find('meta', property='og:image') or soup.find('meta', attrs={'name': 'og:image'}))
+#     if og_image and og_image['content']:
+#         images.append(og_image['content'])
+#     for img in soup.find_all("img", class_="a-dynamic-image"):
+#         print img['src']
+#         images.append(img['src'])
+#     thumbnail_spec = soup.find('link', rel='image_src')
+#     if thumbnail_spec and thumbnail_spec['href']:
+#         images.append(thumbnail_spec['href'])
+#     for img in soup.find_all("img", class_="a-dynamic-image"):
+#         if "sprite" not in img["src"]:
+#             images.append(img['src'])
+#     return render_template('thumbnails.html',images=images)
+
+@app.route('/api/user/status')
+def status():
+    if session.get('logged_in'):
+        if session['logged_in']:
+            return jsonify({'status': True})
+    else:
+        return jsonify({'status': False})
+
+
 @app.route('/api/thumbnail/add', methods=['POST'])
 def thumbnailAdd():
     #image_url = request.data['image_url'];
@@ -238,6 +330,22 @@ def thumbnailAdd():
     
     # return success message
     return jsonify(message="succcess")
+    
+# @app.route('/api/thumbnail/add', methods=['POST'])
+# def thumbnailAdd():
+#     #image_url = request.data['image_url'];
+#     # get data sent from ajax request
+#     image_url = request.json['image_url']
+#     id = request.json["item_id"]
+#     # print image_url
+#     # print id
+#     # Update wishlist item in database with above info
+#     wishlist_item = mywishList.query.filter_by(wishid=id).first()
+#     wishlist_item.image_url = image_url
+#     db.session.commit()
+    
+#     # return success message
+#     return jsonify(message="succcess")
 
 
 # @app.route('/')
