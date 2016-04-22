@@ -1,0 +1,8 @@
+<div ng-init="scrapeForImages()">
+    <div ng-repeat="image in images track by $index">
+        <img src="{{image}}" height="100" width="100" name="theimage" id="myImg" ng-click="myClickedEvent($event)"/>
+    </div>
+</div>
+ 
+            
+            

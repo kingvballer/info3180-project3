@@ -27,7 +27,7 @@ myApp.controller('appController', function($scope, $http) {
     };
     
 });
-myApp.controller('emailControler', function($scope, $http) {
+myApp.controller('emailControler', function($scope, $http, $location) {
     $scope.isPopupVisible = false;
     
     $scope.showPopup = function(email) {
@@ -42,14 +42,14 @@ myApp.controller('emailControler', function($scope, $http) {
     $scope.composeEmail = {};
     $scope.emailSent = false;
     
-    var addressBarUrl = location.pathname;
+    var addressBarUrl = $location.path();
         console.log(addressBarUrl);
         // split URL into different parts after each "/"
         var addressBarUrlParts = addressBarUrl.split("/");
         console.log(addressBarUrlParts);
     
     $scope.sendEmail = function() {
-        $http.post("/api/user/" + addressBarUrlParts[3] + "/wishlists/share", {email: $scope.email}).then(function (response) {
+        $http.post("/api/user/" + addressBarUrlParts[2] + "/wishlists/share", {email: $scope.email}).then(function (response) {
             $scope.emailSent = true;
             console.log (response.data);
             $('#myModal').modal('hide')
@@ -112,6 +112,25 @@ myApp.config(function ($routeProvider){
             access: {restricted: false}
             
         })
+        
+        // .when('/view/:wishid', {
+        //     templateUrl: 'static/angularT/images.html',
+        //     controller: 'wishlistController',
+        //     access: {restricted: false}
+            
+        // })
+        
+        .when('/selectImage/:wishid', {
+            templateUrl: 'static/angularT/images.html',
+            controller: 'wishlistController',
+            access: {restricted: false}
+            
+        })
+        
+        // .when('/share', {
+            
+            
+        // })
         
         
         

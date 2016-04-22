@@ -10,6 +10,7 @@ Flask-OpenId
 Flask-bootstrap==2.3.2.2
 psycopg2
 beautifulsoup4
+flask-cors
 
 
 # ----------------------

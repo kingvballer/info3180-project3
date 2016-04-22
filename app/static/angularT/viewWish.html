@@ -1,20 +1,50 @@
-
-<div>
-    <h1>My Wishlist</h1>
+<div ng-controller = "emailControler">
+    <div class="Full">
+        <h1>My Wishlist</h1>
+        
+        <div class="alert alert-success" ng-show="emailSent">
+            Wishlist Shared Successfully!
+        </div>
 </div>
 <form action="{{ '/api/user/' + userid + '/wishlist' }}" method="GET">
-    <button type="submit" class="btn btn-success">JSON Format</button>
+    <button type="submit" class="btn btn-success">JSON Format</button><br/>
 </form>
-<div ng-init="viewWish()">
-    <div ng-repeat="wish in wishListItems">
-        <h2><a href="{{ wish.url }}">{{ wish.title }}</a></h2>
-        <p>{{ wish.description }}</p>
-        <img ng-src="{{ wish.imageUrl }}" alt="Photo of {{ wish.title }}" />
+    <div ng-init="viewWish()">
+        <div ng-repeat="wish in wishListItems">
+            <h2><a href="{{ wish.url }}">{{ wish.title }}</a></h2>
+            <p>{{ wish.description }}</p>
+            <img ng-src="{{ wish.imageUrl }}" alt="Photo of {{ wish.title }}" />
+        </div><br/>
     </div>
+    <br/><button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Share Wishlist</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Share Wishlist</h4>
+      </div>
+      <div class="modal-body">
+          <form>
+              <input type="text" placeholder="Enter Email Address" ng-model = "email" ><br />
+          
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click = "sendEmail()" class="btn btn-primary">Send</button>
+        </form>
+      </div>
+      
+    </div>
+  </div>
 </div>
+<br/>
  
             
             
 <div ng-controller="logoutController">
-    <a ng-click='logout()' class="btn btn-default">Logout</a>
+    <br/><a ng-click='logout()' class="btn btn-default">Logout</a>
 </div>

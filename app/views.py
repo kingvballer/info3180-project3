@@ -18,6 +18,9 @@ from functools import wraps
 from bs4 import BeautifulSoup
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from flask.ext.cors import CORS, cross_origin
+
+
 import requests
 
 import os
@@ -52,6 +55,9 @@ def load_user(id):
 @app.before_request
 def before_request():
     g.user = current_user
+    
+
+
     
 
 # @app.route('/api/user/login', methods=['POST','GET'])
@@ -170,7 +176,7 @@ def profile_view(userid):
     
     
 @app.route('/api/user/<id>/wishlist', methods = ['POST'])
-@login_required
+# @login_required
 def wishlist(id):
     json_data = request.json
     wishAdd = mywishList(
@@ -184,11 +190,13 @@ def wishlist(id):
     try:
         db.session.add(wishAdd)
         db.session.commit()
+        wishid = wishAdd.wishid # get the last wishlist item id added
         status = 'success'
     except:
+        wishid = None
         status = 'this user is already registered'
     db.session.close()
-    return jsonify({'result': status})
+    return jsonify({'result': status, 'wishid': wishid})
     
     
     
@@ -223,13 +231,13 @@ def wishlists(id):
     # else:
     #   return render_template('viewlistwish.html',wishlists=storage)
       
-@app.route('/api/user/<id>/wishlists/share', methods = ('POST'))
+@app.route('/api/user/<id>/wishlists/share', methods = ['POST'])
 def wishShare(id):
     profile = User.query.filter_by(userid=id).first()
     #profile_vars = {'id':profile.userid, 'firstname':profile.firstname, 'lastname':profile.lastname}
     if request.method == 'POST':
         email = request.json['email']
-        link = "http://info3180-wishlist2-kingvballer.c9users.io/api/user/" + id + "/wishlists"
+        link = "http://info3180-wishlist2-kingvballer.c9users.io/#/view/" + id
         fromname = profile.firstname + " " + profile.lastname
         fromaddr = profile.email
         toname = ''
@@ -260,8 +268,9 @@ Subject: {}
 
         
         
-@app.route('/api/thumbnail/process/<wishid>')
-@login_required
+@app.route('/api/thumbnail/process/<wishid>', methods = ['POST'] )
+# @login_required
+# @cross_origin()
 def getPics(wishid):
     profilefilter = mywishList.query.filter_by(wishid=wishid).first()
     url = profilefilter.description_url
@@ -281,7 +290,8 @@ def getPics(wishid):
     for img in soup.find_all("img", class_="a-dynamic-image"):
         if "sprite" not in img["src"]:
             images.append(img['src'])
-    return render_template('thumbnails.html',images=images)    
+    # return render_template('thumbnails.html',images=images)
+    return jsonify(images=images)
     
 # @app.route('/api/thumbnail/process/<wishid>')
 # @login_required
